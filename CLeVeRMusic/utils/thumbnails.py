@@ -92,6 +92,6 @@ async def get_thumb(videoid):
         return f"cache/{videoid}.png"
 
     except Exception as e:
-        await app.send_message("z0hary", str(e))
+        await app.send_message("OWNER_ID", str(e))
         return YOUTUBE_IMG_URL
 
