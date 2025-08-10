@@ -1,0 +1,169 @@
+from pyrogram import Client
+
+import config
+
+from ..logging import LOGGER
+
+assistants = []
+assistantids = []
+
+
+class Userbot(Client):
+    def __init__(self):
+        self.one = Client(
+            name="CLeVeROAss1",
+            api_id=config.API_ID,
+            api_hash=config.API_HASH,
+            session_string=str(config.STRING1),
+            no_updates=True,
+        )
+        self.two = Client(
+            name="CLeVeROAss2",
+            api_id=config.API_ID,
+            api_hash=config.API_HASH,
+            session_string=str(config.STRING2),
+            no_updates=True,
+        )
+        self.three = Client(
+            name="CLeVeROAss3",
+            api_id=config.API_ID,
+            api_hash=config.API_HASH,
+            session_string=str(config.STRING3),
+            no_updates=True,
+        )
+        self.four = Client(
+            name="CLeVeROAss4",
+            api_id=config.API_ID,
+            api_hash=config.API_HASH,
+            session_string=str(config.STRING4),
+            no_updates=True,
+        )
+        self.five = Client(
+            name="MatrixAss5",
+            api_id=config.API_ID,
+            api_hash=config.API_HASH,
+            session_string=str(config.STRING5),
+            no_updates=True,
+        )
+
+    async def start(self):
+        LOGGER("ميــوزك كليفر").info(f"جارِ تشغيل الحساب المساعد . . .")
+        if config.STRING1:
+            await self.one.start()
+            try:
+                await self.one.join_chat("T0c_aR")
+                await self.one.join_chat("xG_Ls")
+            except:
+                pass
+            assistants.append(1)
+            get_me = await self.one.get_me()
+            self.one.username = get_me.username
+            self.one.id = get_me.id
+            assistantids.append(get_me.id)
+            if get_me.last_name:
+                self.one.name = (
+                    get_me.first_name + " " + get_me.last_name
+                )
+            else:
+                self.one.name = get_me.first_name
+            LOGGER("ميــوزك كليفر").info(f"تم بدء تشغيل الحساب المساعد {self.one.name} ...✓")
+
+        if config.STRING2:
+            await self.two.start()
+            try:
+                await self.one.join_chat("T0c_aR")
+                await self.one.join_chat("xG_Ls")
+            except:
+                pass
+            assistants.append(2)
+            try:
+                await self.two.send_message(config.LOGGER_ID, "» تم تشغيـل الحسـاب المسـاعـد² .. بنجـاح ✅")
+            except:
+                LOGGER(__name__).error(
+                    "Assistant Account 2 has failed to access the log Group. Make sure that you have added your assistant to your log group and promoted as admin!"
+                )
+                exit()
+            self.two.id = self.two.me.id
+            self.two.name = self.two.me.mention
+            self.two.username = self.two.me.username
+            assistantids.append(self.two.id)
+            LOGGER("ميــوزك كليفر").info(f"Assistant Two Started as {self.two.name}")
+
+        if config.STRING3:
+            await self.three.start()
+            try:
+                await self.one.join_chat("T0c_aR")
+                await self.one.join_chat("xG_Ls")
+            except:
+                pass
+            assistants.append(3)
+            try:
+                await self.three.send_message(config.LOGGER_ID, "» تم تشغيـل الحسـاب المسـاعـد³ .. بنجـاح ✅")
+            except:
+                LOGGER(__name__).error(
+                    "Assistant Account 3 has failed to access the log Group. Make sure that you have added your assistant to your log group and promoted as admin! "
+                )
+                exit()
+            self.three.id = self.three.me.id
+            self.three.name = self.three.me.mention
+            self.three.username = self.three.me.username
+            assistantids.append(self.three.id)
+            LOGGER("ميــوزك كليفر").info(f"Assistant Three Started as {self.three.name}")
+
+        if config.STRING4:
+            await self.four.start()
+            try:
+                await self.one.join_chat("T0c_aR")
+                await self.one.join_chat("xG_Ls")
+            except:
+                pass
+            assistants.append(4)
+            try:
+                await self.four.send_message(config.LOGGER_ID, "» تم تشغيـل الحسـاب المسـاعـد⁴ .. بنجـاح ✅")
+            except:
+                LOGGER(__name__).error(
+                    "Assistant Account 4 has failed to access the log Group. Make sure that you have added your assistant to your log group and promoted as admin! "
+                )
+                exit()
+            self.four.id = self.four.me.id
+            self.four.name = self.four.me.mention
+            self.four.username = self.four.me.username
+            assistantids.append(self.four.id)
+            LOGGER("ميــوزك كليفر").info(f"Assistant Four Started as {self.four.name}")
+
+        if config.STRING5:
+            await self.five.start()
+            try:
+                await self.one.join_chat("T0c_aR")
+                await self.one.join_chat("xG_Ls")
+            except:
+                pass
+            assistants.append(5)
+            try:
+                await self.five.send_message(config.LOGGER_ID, "» تم تشغيـل الحسـاب المسـاعـد⅝ .. بنجـاح ✅")
+            except:
+                LOGGER(__name__).error(
+                    "Assistant Account 5 has failed to access the log Group. Make sure that you have added your assistant to your log group and promoted as admin! "
+                )
+                exit()
+            self.five.id = self.five.me.id
+            self.five.name = self.five.me.mention
+            self.five.username = self.five.me.username
+            assistantids.append(self.five.id)
+            LOGGER("ميــوزك كليفر").info(f"Assistant Five Started as {self.five.name}")
+
+    async def stop(self):
+        LOGGER("ميــوزك كليفر").info(f"Stopping Assistants...")
+        try:
+            if config.STRING1:
+                await self.one.stop()
+            if config.STRING2:
+                await self.two.stop()
+            if config.STRING3:
+                await self.three.stop()
+            if config.STRING4:
+                await self.four.stop()
+            if config.STRING5:
+                await self.five.stop()
+        except:
+            pass
