@@ -64,7 +64,7 @@ async def get_thumb(videoid):
         draw = ImageDraw.Draw(background)
         font = ImageFont.truetype("CLeVeR/assets/font2.ttf", 40)
         font2 = ImageFont.truetype("CLeVeR/assets/font2.ttf", 70)
-        arial = ImageFont.truetype("CLeVeR/assets/font.ttf", 30)
+        arial = ImageFont.truetype("CLeVeR/assets/font2.ttf", 30)
 
         para = textwrap.wrap(title, width=32)
         j = 0
@@ -92,6 +92,6 @@ async def get_thumb(videoid):
         return f"cache/{videoid}.png"
 
     except Exception as e:
-        await app.send_message("z0hary", str(e))
+        await app.send_message("OWNER_ID", str(e))
         return YOUTUBE_IMG_URL
 
