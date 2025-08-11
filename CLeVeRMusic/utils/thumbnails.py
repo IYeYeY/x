@@ -7,7 +7,7 @@ from unidecode import unidecode
 from youtubesearchpython.__future__ import VideosSearch
 
 from CLeVeRMusic import app
-from config import YOUTUBE_IMG_URL, OWNER_ID
+from config import YOUTUBE_IMG_URL, OWNER_ID  # OWNER_ID من الكونفج
 
 def changeImageSize(maxWidth, maxHeight, image):
     widthRatio = maxWidth / image.size[0]
@@ -55,7 +55,7 @@ async def get_thumb(videoid):
         # ==== جلب صورة الأونر ====
         usr = await app.get_chat(OWNER_ID)
         dev_photo_path = await app.download_media(usr.photo.big_file_id)
-        dev_img = Image.open(dev_photo_path).convert("RGB")
+        dev_img = Image.open(dev_photo_path)
 
         # قص الصورة على شكل مربع
         size = min(dev_img.size)
@@ -63,36 +63,45 @@ async def get_thumb(videoid):
         top = (dev_img.height - size) // 2
         dev_img = dev_img.crop((left, top, left + size, top + size))
 
-        # تكبير الحجم لـ 570×570
+        # تغيير الحجم لـ 570x570
         owner_size = 570
         dev_img = dev_img.resize((owner_size, owner_size))
 
         # إضافة إطار أبيض
-        border_size = 10
+        border_size = 8
         border_img = Image.new("RGB", (owner_size + 2*border_size, owner_size + 2*border_size), "white")
         border_img.paste(dev_img, (border_size, border_size))
 
-        # وضع الصورة في الجنب الشمال في النص
-        y_pos = (background.height - border_img.height) // 2
-        background.paste(border_img, (30, y_pos))
+        # حساب موضع الصورة (الشمال في النص عموديًا)
+        img_x = 50
+        img_y = (background.height - border_img.height) // 2
+        background.paste(border_img, (img_x, img_y))
+        # =========================
 
-        # ==== كتابة النص "CLeVeR PLAYiNg" بجانب الصورة من الأعلى ====
         draw = ImageDraw.Draw(background)
-        font_path = "CLeVeRMusic/assets/font2.ttf"  # خط عريض
-        font = ImageFont.truetype(font_path, 60)
-        text_x = 30 + border_img.width + 20
-        draw.text((text_x, y_pos), "CLeVeR PLAYiNg", fill="white", font=font)
 
-        # ==== باقي البيانات ====
+        # خطوط
+        font_big = ImageFont.truetype("CLeVeRMusic/assets/font2.ttf", 65)   # عنوان كبير
+        font_small = ImageFont.truetype("CLeVeRMusic/assets/font.ttf", 35)  # يوزر + ID
         arial = ImageFont.truetype("CLeVeRMusic/assets/font2.ttf", 30)
-        font2 = ImageFont.truetype("CLeVeRMusic/assets/font.ttf", 30)
+        font = ImageFont.truetype("CLeVeRMusic/assets/font.ttf", 30)
 
-        draw.text((55, 660), f"{channel} | {views[:23]}", (255, 255, 255), font=arial)
-        draw.text((57, 700), clear(title), (255, 255, 255), font=font2)
-        draw.line([(55, 760), (1220, 760)], fill="white", width=5, joint="curve")
-        draw.ellipse([(918, 748), (942, 772)], outline="white", fill="white", width=15)
-        draw.text((36, 785), "00:00", (255, 255, 255), font=arial)
-        draw.text((1185, 785), f"{duration[:23]}", (255, 255, 255), font=arial)
+        # النص فوق الصورة على الشمال
+        text_x = img_x + owner_size + 30
+        text_y = img_y
+        draw.text((text_x, text_y), "CLeVeR PLAYiNg", fill="white", font=font_big)
+
+        # تحت العنوان: اليوزر + ID
+        user_text = f"@{usr.username} | ID: {usr.id}"
+        draw.text((text_x, text_y + 80), user_text, fill="#cccccc", font=font_small)
+
+        # باقي المعلومات أسفل
+        draw.text((55, 560), f"{channel} | {views[:23]}", (255, 255, 255), font=arial)
+        draw.text((57, 600), clear(title), (255, 255, 255), font=font)
+        draw.line([(55, 660), (1220, 660)], fill="white", width=5, joint="curve")
+        draw.ellipse([(918, 648), (942, 672)], outline="white", fill="white", width=15)
+        draw.text((36, 685), "00:00", (255, 255, 255), font=arial)
+        draw.text((1185, 685), f"{duration[:23]}", (255, 255, 255), font=arial)
 
         os.remove(f"cache/thumb{videoid}.png")
         background.save(f"cache/{videoid}.png")
