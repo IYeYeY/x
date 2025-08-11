@@ -7,7 +7,7 @@ from unidecode import unidecode
 from youtubesearchpython.__future__ import VideosSearch
 
 from CLeVeRMusic import app
-from config import YOUTUBE_IMG_URL, OWNER_ID  # OWNER_ID من الكونفج
+from config import YOUTUBE_IMG_URL, OWNER_ID, OWNER_DEVELOPER  # OWNER_ID و OWNER_DEVELOPER من الكونفج
 
 def changeImageSize(maxWidth, maxHeight, image):
     widthRatio = maxWidth / image.size[0]
@@ -54,25 +54,40 @@ async def get_thumb(videoid):
 
         # ==== جلب صورة الأونر ====
         usr = await app.get_chat(OWNER_ID)
-        dev_photo_path = await app.download_media(usr.photo.big_file_id)
 
-        dev_img = Image.open(dev_photo_path)
-        size = min(dev_img.size)
-        left = (dev_img.width - size) // 2
-        top = (dev_img.height - size) // 2
-        dev_img = dev_img.crop((left, top, left + size, top + size))
-        owner_size = 570
-        dev_img = dev_img.resize((owner_size, owner_size))
+        if usr.photo:
+            dev_photo_path = await app.download_media(usr.photo.big_file_id)
+        else:
+            dev_usr = await app.get_chat(OWNER_DEVELOPER)
+            if dev_usr.photo:
+                dev_photo_path = await app.download_media(dev_usr.photo.big_file_id)
+            else:
+                dev_photo_path = None  # مفيش صورة خالص
 
-        # إضافة إطار أبيض
-        border_size = 8
-        border_img = Image.new("RGB", (owner_size + 2*border_size, owner_size + 2*border_size), "white")
-        border_img.paste(dev_img, (border_size, border_size))
+        if dev_photo_path:
+            dev_img = Image.open(dev_photo_path)
+            size = min(dev_img.size)
+            left = (dev_img.width - size) // 2
+            top = (dev_img.height - size) // 2
+            dev_img = dev_img.crop((left, top, left + size, top + size))
+            owner_size = 570
+            dev_img = dev_img.resize((owner_size, owner_size))
 
-        # موضع صورة الأونر
-        img_x = 50
-        img_y = (background.height - border_img.height) // 2
-        background.paste(border_img, (img_x, img_y))
+            # إضافة إطار أبيض
+            border_size = 8
+            border_img = Image.new("RGB", (owner_size + 2*border_size, owner_size + 2*border_size), "white")
+            border_img.paste(dev_img, (border_size, border_size))
+
+            # موضع صورة الأونر
+            img_x = 50
+            img_y = (background.height - border_img.height) // 2
+            background.paste(border_img, (img_x, img_y))
+            text_x = img_x + owner_size + 50
+            text_y = img_y
+        else:
+            # لو مفيش صورة أصلاً
+            text_x = 50
+            text_y = 50
 
         draw = ImageDraw.Draw(background)
 
@@ -81,10 +96,6 @@ async def get_thumb(videoid):
         font_small = ImageFont.truetype("CLeVeRMusic/assets/font.ttf", 35)
         arial = ImageFont.truetype("CLeVeRMusic/assets/font2.ttf", 30)
         font = ImageFont.truetype("CLeVeRMusic/assets/font.ttf", 30)
-
-        # النص على اليمين
-        text_x = img_x + owner_size + 50
-        text_y = img_y
 
         # العنوان
         draw.text((text_x, text_y), "CLeVeR PLAYiNg", fill="white", font=font_big)
