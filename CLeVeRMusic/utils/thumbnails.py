@@ -7,8 +7,7 @@ from unidecode import unidecode
 from youtubesearchpython.__future__ import VideosSearch
 
 from CLeVeRMusic import app
-from config import YOUTUBE_IMG_URL
-from CLeVeRr.daty import get_devss
+from config import YOUTUBE_IMG_URL, OWNER_ID  # نسحب OWNER_ID من الكونفج
 
 def changeImageSize(maxWidth, maxHeight, image):
     widthRatio = maxWidth / image.size[0]
@@ -53,9 +52,7 @@ async def get_thumb(videoid):
         background = image2.filter(ImageFilter.BoxBlur(10))
         background = ImageEnhance.Brightness(background).enhance(0.5)
 
-        # ==== جلب صورة المطور ====
-        me = await app.get_me()
-        OWNER_ID = await get_devss(me.username)
+        # ==== جلب صورة الأونر ====
         usr = await app.get_chat(OWNER_ID)
         dev_photo_path = await app.download_media(usr.photo.big_file_id)
         dev_img = Image.open(dev_photo_path)
@@ -72,7 +69,7 @@ async def get_thumb(videoid):
         border_img = Image.new("RGB", (150 + 2*border_size, 150 + 2*border_size), "white")
         border_img.paste(dev_img, (border_size, border_size))
 
-        # لصق صورة المطور
+        # لصق صورة الأونر
         background.paste(border_img, (1080, 560))
         # =========================
 
@@ -95,4 +92,3 @@ async def get_thumb(videoid):
     except Exception as e:
         print(e)
         return YOUTUBE_IMG_URL
-
