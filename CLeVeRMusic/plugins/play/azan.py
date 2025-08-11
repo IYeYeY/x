@@ -56,3 +56,9 @@ async def announce_prayer(app: Client, prayer_name: str):
                     print(f"خطأ في تشغيل الأذان في {dialog.chat.id}:", e)
         except Exception as e:
             print(f"خطأ في إرسال الرسالة لـ {dialog.chat.id}:", e)
+
+# دالة azkar المطلوبة في __main__.py
+async def azkar():
+    from CLeVeRMusic import app
+    await prayer_checker(app)
+
