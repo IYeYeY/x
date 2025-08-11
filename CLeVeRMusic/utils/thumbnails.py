@@ -55,15 +55,12 @@ async def get_thumb(videoid):
         # ==== جلب صورة الأونر ====
         usr = await app.get_chat(OWNER_ID)
         dev_photo_path = await app.download_media(usr.photo.big_file_id)
-        dev_img = Image.open(dev_photo_path)
 
-        # قص الصورة على شكل مربع
+        dev_img = Image.open(dev_photo_path)
         size = min(dev_img.size)
         left = (dev_img.width - size) // 2
         top = (dev_img.height - size) // 2
         dev_img = dev_img.crop((left, top, left + size, top + size))
-
-        # تغيير الحجم لـ 570x570
         owner_size = 570
         dev_img = dev_img.resize((owner_size, owner_size))
 
@@ -72,36 +69,34 @@ async def get_thumb(videoid):
         border_img = Image.new("RGB", (owner_size + 2*border_size, owner_size + 2*border_size), "white")
         border_img.paste(dev_img, (border_size, border_size))
 
-        # حساب موضع الصورة (الشمال في النص عموديًا)
+        # موضع صورة الأونر
         img_x = 50
         img_y = (background.height - border_img.height) // 2
         background.paste(border_img, (img_x, img_y))
-        # =========================
 
         draw = ImageDraw.Draw(background)
 
         # خطوط
-        font_big = ImageFont.truetype("CLeVeRMusic/assets/font2.ttf", 65)   # عنوان كبير
-        font_small = ImageFont.truetype("CLeVeRMusic/assets/font.ttf", 35)  # يوزر + ID
+        font_big = ImageFont.truetype("CLeVeRMusic/assets/font2.ttf", 70)   # عنوان كبير Bold
+        font_small = ImageFont.truetype("CLeVeRMusic/assets/font.ttf", 35)
         arial = ImageFont.truetype("CLeVeRMusic/assets/font2.ttf", 30)
         font = ImageFont.truetype("CLeVeRMusic/assets/font.ttf", 30)
 
-        # النص فوق الصورة على الشمال
-        text_x = img_x + owner_size + 30
+        # النص على اليمين
+        text_x = img_x + owner_size + 50
         text_y = img_y
+
+        # العنوان
         draw.text((text_x, text_y), "CLeVeR PLAYiNg", fill="white", font=font_big)
 
-        # تحت العنوان: اليوزر + ID
-        user_text = f"@{usr.username} | ID: {usr.id}"
-        draw.text((text_x, text_y + 80), user_text, fill="#cccccc", font=font_small)
+        # اليوزر و ID تحت بعض
+        draw.text((text_x, text_y + 90), f"@{usr.username}", fill="#cccccc", font=font_small)
+        draw.text((text_x, text_y + 135), f"ID: {usr.id}", fill="#cccccc", font=font_small)
 
         # باقي المعلومات أسفل
-        draw.text((55, 560), f"{channel} | {views[:23]}", (255, 255, 255), font=arial)
-        draw.text((57, 600), clear(title), (255, 255, 255), font=font)
-        draw.line([(55, 660), (1220, 660)], fill="white", width=5, joint="curve")
-        draw.ellipse([(918, 648), (942, 672)], outline="white", fill="white", width=15)
-        draw.text((36, 685), "00:00", (255, 255, 255), font=arial)
-        draw.text((1185, 685), f"{duration[:23]}", (255, 255, 255), font=arial)
+        draw.text((text_x, text_y + 220), clear(title), (255, 255, 255), font=font)
+        draw.text((text_x, text_y + 260), f"{channel} | {views[:23]}", (255, 255, 255), font=arial)
+        draw.text((text_x, text_y + 300), f"00:00 / {duration}", (255, 255, 255), font=arial)
 
         os.remove(f"cache/thumb{videoid}.png")
         background.save(f"cache/{videoid}.png")
