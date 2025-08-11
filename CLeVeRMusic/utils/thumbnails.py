@@ -52,12 +52,10 @@ async def get_thumb(videoid):
         background = image2.filter(ImageFilter.BoxBlur(10))
         background = ImageEnhance.Brightness(background).enhance(0.5)
 
-        draw = ImageDraw.Draw(background)
-
         # ==== جلب صورة الأونر ====
         usr = await app.get_chat(OWNER_ID)
         dev_photo_path = await app.download_media(usr.photo.big_file_id)
-        dev_img = Image.open(dev_photo_path)
+        dev_img = Image.open(dev_photo_path).convert("RGB")
 
         # قص الصورة على شكل مربع
         size = min(dev_img.size)
@@ -65,38 +63,36 @@ async def get_thumb(videoid):
         top = (dev_img.height - size) // 2
         dev_img = dev_img.crop((left, top, left + size, top + size))
 
-        # تكبير حجم الصورة
-        owner_size = 650
+        # تكبير الحجم لـ 570×570
+        owner_size = 570
         dev_img = dev_img.resize((owner_size, owner_size))
 
         # إضافة إطار أبيض
-        border_size = 12
+        border_size = 10
         border_img = Image.new("RGB", (owner_size + 2*border_size, owner_size + 2*border_size), "white")
         border_img.paste(dev_img, (border_size, border_size))
 
-        # وضع الصورة على الشمال في النص
+        # وضع الصورة في الجنب الشمال في النص
         y_pos = (background.height - border_img.height) // 2
-        x_pos = 30
-        background.paste(border_img, (x_pos, y_pos))
+        background.paste(border_img, (30, y_pos))
 
-        # إعداد الخط الكبير والعريض
-        arial_big_bold = ImageFont.truetype("CLeVeRMusic/assets/font2.ttf", 80)
+        # ==== كتابة النص "CLeVeR PLAYiNg" بجانب الصورة من الأعلى ====
+        draw = ImageDraw.Draw(background)
+        font_path = "CLeVeRMusic/assets/font2.ttf"  # خط عريض
+        font = ImageFont.truetype(font_path, 60)
+        text_x = 30 + border_img.width + 20
+        draw.text((text_x, y_pos), "CLeVeR PLAYiNg", fill="white", font=font)
 
-        # وضع النص بجانب الصورة من أعلى
-        text_x = x_pos + border_img.width + 50
-        text_y = y_pos + 20
-        draw.text((text_x, text_y), "CLeVeR PLAYiNg", fill="white", font=arial_big_bold)
-
-        # باقي النصوص والمعلومات
+        # ==== باقي البيانات ====
         arial = ImageFont.truetype("CLeVeRMusic/assets/font2.ttf", 30)
-        font = ImageFont.truetype("CLeVeRMusic/assets/font.ttf", 30)
+        font2 = ImageFont.truetype("CLeVeRMusic/assets/font.ttf", 30)
 
-        draw.text((55, 560), f"{channel} | {views[:23]}", (255, 255, 255), font=arial)
-        draw.text((57, 600), clear(title), (255, 255, 255), font=font)
-        draw.line([(55, 660), (1220, 660)], fill="white", width=5, joint="curve")
-        draw.ellipse([(918, 648), (942, 672)], outline="white", fill="white", width=15)
-        draw.text((36, 685), "00:00", (255, 255, 255), font=arial)
-        draw.text((1185, 685), f"{duration[:23]}", (255, 255, 255), font=arial)
+        draw.text((55, 660), f"{channel} | {views[:23]}", (255, 255, 255), font=arial)
+        draw.text((57, 700), clear(title), (255, 255, 255), font=font2)
+        draw.line([(55, 760), (1220, 760)], fill="white", width=5, joint="curve")
+        draw.ellipse([(918, 748), (942, 772)], outline="white", fill="white", width=15)
+        draw.text((36, 785), "00:00", (255, 255, 255), font=arial)
+        draw.text((1185, 785), f"{duration[:23]}", (255, 255, 255), font=arial)
 
         os.remove(f"cache/thumb{videoid}.png")
         background.save(f"cache/{videoid}.png")
