@@ -31,10 +31,10 @@ BOT_TOKEN = getenv("BOT_TOKEN", None)
 DURATION_LIMIT_MIN = int(getenv("DURATION_LIMIT", 300))
 
 # Chat id of a group for logging bot's activities
-LOGGER_ID = int(getenv("LOGGER_ID", -1002051286023))
+LOGGER_ID = int(getenv("LOGGER_ID", -1002526262334))
 
 # Get this value from @FallenxBot on Telegram by /id
-OWNER_ID = int(getenv("OWNER_ID", 7004732448))
+OWNER_ID = int(getenv("OWNER_ID", 1471433717))
 
 ## Fill these variables if you're deploying on heroku.
 # Your heroku app name
@@ -89,21 +89,21 @@ confirmer = {}
 
 
 START_IMG_URL = getenv(
-    "START_IMG_URL", "https://telegra.ph/file/645af9b1cc12cc0a6dfc8.jpg"
+    "START_IMG_URL", "https://t.me/WORLE_CLEVER/25"
 )
 PING_IMG_URL = getenv(
-    "PING_IMG_URL", "https://telegra.ph/file/645af9b1cc12cc0a6dfc8.jpg"
+    "PING_IMG_URL", "https://t.me/WORLE_CLEVER/25"
 )
-PLAYLIST_IMG_URL = "https://telegra.ph/file/645af9b1cc12cc0a6dfc8.jpg"
-STATS_IMG_URL = "https://telegra.ph/file/645af9b1cc12cc0a6dfc8.jpg"
-TELEGRAM_AUDIO_URL = "https://telegra.ph/file/645af9b1cc12cc0a6dfc8.jpg"
-TELEGRAM_VIDEO_URL = "https://telegra.ph/file/645af9b1cc12cc0a6dfc8.jpg"
-STREAM_IMG_URL = "https://telegra.ph/file/645af9b1cc12cc0a6dfc8.jpg"
-SOUNCLOUD_IMG_URL = "https://telegra.ph/file/645af9b1cc12cc0a6dfc8.jpg"
-YOUTUBE_IMG_URL = "https://telegra.ph/file/645af9b1cc12cc0a6dfc8.jpg"
-SPOTIFY_ARTIST_IMG_URL = "https://telegra.ph/file/645af9b1cc12cc0a6dfc8.jpg"
-SPOTIFY_ALBUM_IMG_URL = "https://telegra.ph/file/645af9b1cc12cc0a6dfc8.jpg"
-SPOTIFY_PLAYLIST_IMG_URL = "https://telegra.ph/file/645af9b1cc12cc0a6dfc8.jpg"
+PLAYLIST_IMG_URL = "https://t.me/WORLE_CLEVER/25"
+STATS_IMG_URL = "https://t.me/WORLE_CLEVER/25"
+TELEGRAM_AUDIO_URL = "https://t.me/WORLE_CLEVER/25"
+TELEGRAM_VIDEO_URL = "https://t.me/WORLE_CLEVER/25"
+STREAM_IMG_URL = "https://t.me/WORLE_CLEVER/25"
+SOUNCLOUD_IMG_URL = "https://t.me/WORLE_CLEVER/25"
+YOUTUBE_IMG_URL = "https://t.me/WORLE_CLEVER/25"
+SPOTIFY_ARTIST_IMG_URL = "https://t.me/WORLE_CLEVER/25"
+SPOTIFY_ALBUM_IMG_URL = "https://t.me/WORLE_CLEVER/25"
+SPOTIFY_PLAYLIST_IMG_URL = "https://t.me/WORLE_CLEVER/25"
 
 
 def time_to_seconds(time):
