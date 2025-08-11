@@ -1,110 +1,63 @@
 import asyncio
-from pyrogram import filters
-from pyrogram.errors import FloodWait
-from pyrogram.raw import types
-from CLeVeRMusic import app
-import random
-from datetime import datetime
-import requests
-import pytz
-from CLeVeRMusic.core.call import Zoro ##غيى كلمه دي ف ملف 
-from pytgcalls import PyTgCalls, StreamType
-from pytgcalls.types.input_stream import AudioPiped, AudioVideoPiped
-from CLeVeRMusic.core.call import Zoro
-from CLeVeRMusic.utils.database import *
-from pytgcalls.exceptions import (NoActiveGroupCall,TelegramServerError,AlreadyJoinedError)
-from pyrogram.errors import (
-    ChatAdminRequired,
-    UserAlreadyParticipant,
-    UserNotParticipant,
-)
+import datetime
+import aiohttp
+from pytz import timezone
+from pyrogram import Client
+from CLeVeRMusic.core.call import Anony
 
-tz = pytz.timezone('Africa/Cairo')
+# مسار ملف الأذان
+AZAN_PATH = "CLeVeRMusic/assets/azan.mp3"
 
-chat = []
+# إحداثيات القاهرة
+LAT = 30.0444
+LON = 31.2357
 
-@app.on_message(filters.text & ~filters.private, group = 20)
-async def azaan(c, msg):
-  if msg.text == "تفعيل الاذان":
-    if msg.chat.id in chat:
-      return await msg.reply_text("- الاذان متفعل هنا من قبل 🥰♥️")
-    else:
-      chat.append(msg.chat.id)
-      return await msg.reply_text("تم تفعيل الاذان ♥️🌿")
-  elif msg.text == "تعطيل الاذان":
-    if msg.chat.id in chat:
-      chat.remove(msg.chat.id)
-      return await msg.reply_text("تم تعطيل الاذان ♥️🌿")
-    else:
-      return await msg.reply_text("- الاذان متعطل هنا من قبل 🥰♥️")
-      
-async def kill():
-  for i in chat:
-    await Zoro.force_stop_stream(i)
+# تخزين مواقيت الصلاة
+prayer_times = {}
 
+async def get_prayer_times():
+    global prayer_times
+    today = datetime.datetime.now().strftime("%Y-%m-%d")
+    url = f"http://api.aladhan.com/v1/timings/{today}?latitude={LAT}&longitude={LON}&method=5"
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as resp:
+            data = await resp.json()
+            timings = data["data"]["timings"]
+            prayer_times = {
+                "Fajr": timings["Fajr"],
+                "Dhuhr": timings["Dhuhr"],
+                "Asr": timings["Asr"],
+                "Maghrib": timings["Maghrib"],
+                "Isha": timings["Isha"]
+            }
+    print("تم تحديث أوقات الصلاة:", prayer_times)
 
-async def play(i):
-  assistant = await group_assistant(Zoro,i)
-  file_path = "CLeVeRMusic/assets/azan.m4a"
-  stream = AudioPiped(file_path, audio_parameters=HighQualityAudio())
-  try:
-      await assistant.join_group_call(
-           i,
-           stream,
-           stream_type=StreamType().pulse_stream,
-      )
-  except NoActiveGroupCall:
-    try:
-        await Zoro.join_assistant(i,i)
-    except Exception as e:
-       await app.send_message(i,f"{e}")
-  except TelegramServerError:
-    await app.send_message(i,"في خطا ف سيرفرات التليجرام")
-  except AlreadyJoinedError:
-    await kill()
-    try:
-        await assistant.join_group_call(
-           i,
-           stream,
-           stream_type=StreamType().pulse_stream,
-        )
-    except Exception as e:
-        await app.send_message(i,f"{e}")
-    
-           
-       
+async def prayer_checker(app: Client):
+    cairo_tz = timezone("Africa/Cairo")
+    await get_prayer_times()
+    while True:
+        now = datetime.datetime.now(cairo_tz).strftime("%H:%M")
+        for prayer, time_str in prayer_times.items():
+            if now == time_str:
+                await announce_prayer(app, prayer)
+        await asyncio.sleep(30)  # فحص كل 30 ثانية
 
-def prayer_time():
-   try:
-       prayer = requests.get(f"http://api.aladhan.com/timingsByAddress?address=Cairo&method=4&school=0")
-       prayer = prayer.json()
-       fajr = datetime.strptime(prayer['data']['timings']['Fajr'], '%H:%M').strftime('%H:%M')
-       dhuhr = datetime.strptime(prayer['data']['timings']['Dhuhr'], '%H:%M').strftime('%H:%M')
-       asr = datetime.strptime(prayer['data']['timings']['Asr'], '%H:%M').strftime('%H:%M')
-       maghrib = datetime.strptime(prayer['data']['timings']['Maghrib'], '%H:%M').strftime('%H:%M')
-       isha = datetime.strptime(prayer['data']['timings']['Isha'], '%H:%M').strftime('%H:%M')
-       if datetime.now(tz).strftime('%H:%M') == fajr:
-         return "الفجر"
-       elif datetime.now(tz).strftime('%H:%M') == dhuhr:
-         return "الظهر"
-       elif datetime.now(tz).strftime('%H:%M') == asr:
-         return "العصر"
-       elif datetime.now(tz).strftime('%H:%M') == maghrib:
-         return "المغرب"
-       elif datetime.now(tz).strftime('%H:%M') == isha:  
-         return "العشاء"
-   except Exception as e:
-       asyncio.sleep(5)
-       print(e)  
+async def announce_prayer(app: Client, prayer_name: str):
+    text = f"حان الآن أذان {prayer_name}"
+    async for dialog in app.get_dialogs():
+        try:
+            await app.send_message(dialog.chat.id, text)
+            if dialog.chat.type.name in ["GROUP", "SUPERGROUP"]:
+                try:
+                    await Anony.stream_call(AZAN_PATH)
+                    await asyncio.sleep(180)  # مدة الأذان 3 دقائق
+                    await Anony.leave_call(dialog.chat.id)
+                except Exception as e:
+                    print(f"خطأ في تشغيل الأذان في {dialog.chat.id}:", e)
+        except Exception as e:
+            print(f"خطأ في إرسال الرسالة لـ {dialog.chat.id}:", e)
 
-async def azkar():
-  while not await asyncio.sleep(2):
-    if prayer_time():
-     prayer = prayer_time()
-     await kill()
-     for i in chat:
-       await app.send_message(i, f"حان الان وقت اذان {prayer} بالتوقيت المحلي للقاهرة 🥰♥️")
-       await play(i)
-     await asyncio.sleep(174)
-     await kill()
-
+# تشغيل التشييك مع البوت
+@app.on_startup
+async def start_tasks(_, __):
+    asyncio.create_task(prayer_checker(app))
