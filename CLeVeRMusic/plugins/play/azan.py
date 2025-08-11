@@ -3,7 +3,7 @@ import datetime
 import aiohttp
 from pytz import timezone
 from pyrogram import Client
-from CLeVeRMusic.core.call import Anony
+from CLeVeRMusic.core.call import Zoro
 
 # مسار ملف الأذان
 AZAN_PATH = "CLeVeRMusic/assets/azan.mp3"
@@ -49,9 +49,9 @@ async def announce_prayer(app: Client, prayer_name: str):
             await app.send_message(dialog.chat.id, text)
             if dialog.chat.type.name in ["GROUP", "SUPERGROUP"]:
                 try:
-                    await Anony.stream_call(AZAN_PATH)
+                    await Zoro.stream_call(AZAN_PATH)
                     await asyncio.sleep(180)  # مدة الأذان 3 دقائق
-                    await Anony.leave_call(dialog.chat.id)
+                    await Zoro.leave_call(dialog.chat.id)
                 except Exception as e:
                     print(f"خطأ في تشغيل الأذان في {dialog.chat.id}:", e)
         except Exception as e:
