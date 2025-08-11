@@ -56,8 +56,3 @@ async def announce_prayer(app: Client, prayer_name: str):
                     print(f"خطأ في تشغيل الأذان في {dialog.chat.id}:", e)
         except Exception as e:
             print(f"خطأ في إرسال الرسالة لـ {dialog.chat.id}:", e)
-
-# تشغيل التشييك مع البوت
-@app.on_startup
-async def start_tasks(_, __):
-    asyncio.create_task(prayer_checker(app))
