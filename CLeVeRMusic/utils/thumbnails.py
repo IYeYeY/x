@@ -69,7 +69,7 @@ async def get_thumb(videoid):
         border_img = Image.new("RGB", (150 + 2*border_size, 150 + 2*border_size), "white")
         border_img.paste(dev_img, (border_size, border_size))
 
-        # لصق صورة الأونر
+        # لصق صورة الأونر في أسفل يمين
         background.paste(border_img, (1080, 560))
         # =========================
 
@@ -77,7 +77,10 @@ async def get_thumb(videoid):
         arial = ImageFont.truetype("CLeVeRMusic/assets/font2.ttf", 30)
         font = ImageFont.truetype("CLeVeRMusic/assets/font.ttf", 30)
 
-        draw.text((1110, 8), unidecode(app.name), fill="white", font=arial)
+        # النص الثابت
+        draw.text((1110, 8), "CLeVeR PLAYiNg", fill="white", font=arial)
+
+        # باقي المعلمات التلقائية
         draw.text((55, 560), f"{channel} | {views[:23]}", (255, 255, 255), font=arial)
         draw.text((57, 600), clear(title), (255, 255, 255), font=font)
         draw.line([(55, 660), (1220, 660)], fill="white", width=5, joint="curve")
