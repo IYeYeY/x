@@ -97,7 +97,7 @@ async def get_bot_name(bot_username):
     if not name:
         bot = await bot_name.find_one({"bot_username": bot_username})  # تأكد من استخدام await هنا
         if not bot:
-            return "بلاك"
+            return "كليفر"
         botname[bot_username] = bot["bot_name"]
         return bot["bot_name"]
     return name
@@ -774,3 +774,4 @@ async def add_served_channel(chat_id: int):
     if is_served:
         return
     return await channelchatdb.insert_one({"chat_id": chat_id})
+
