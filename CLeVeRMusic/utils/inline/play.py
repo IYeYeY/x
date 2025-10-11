@@ -1,4 +1,5 @@
 import math
+from CLeVeRMusic import app
 from pyrogram.types import InlineKeyboardButton
 from CLeVeRMusic.utils.formatters import time_to_seconds
 
@@ -21,24 +22,29 @@ def track_markup(_, videoid, user_id, channel, fplay):
                 callback_data=f"forceclose {videoid}|{user_id}",
             )
         ],
+    ]
+    return buttons
+
+
+def stream_markup_timer(_, chat_id, played, dur):
+    buttons = [
         [
-            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{channel}"),
-            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{channel}"),
-            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{channel}"),
-            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{channel}"),
-            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{channel}"),
+            InlineKeyboardButton(text="𝐄𝐍𝐃", callback_data=f"ADMIN Stop|{chat_id}"),
+            InlineKeyboardButton(text="𝐑𝐄𝐒𝐔𝐌𝐄", callback_data=f"ADMIN Resume|{chat_id}"),
+            InlineKeyboardButton(text="𝐏𝐀𝐔𝐒𝐄", callback_data=f"ADMIN Pause|{chat_id}"),
+        ],
+        [
+            InlineKeyboardButton(text="𝐂𝐇𝐀𝐍𝐍𝐄𝐋 ", url=f"https://t.me/xG_Ls"),
+            InlineKeyboardButton(text="𝐆𝐑𝐎𝐔𝐏", url=f"https://t.me/T0c_aR"),
+        ],
+        [
+            InlineKeyboardButton(text="𝐁𝐨𝐝𝐚 𓏺 بــودا", url=f"https://t.me/CL_3Q"),
         ],
         [
             InlineKeyboardButton(
-                text=f"اوهام .",
-                url="https://t.me/xG_Ln",
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                text="اضف البوت الي مجموعتك او قناتك⋡",
-                url=f"https://t.me/{_['bot_username']}?startgroup=true",
-            )
+                text="𓏺 𝖺𝖣𝖣 𝖬𝖾 𝖳𝗈 𝖸𝗈𝗎𝗋 𝖦𝗋𝗈u𝗉𝗌 .",
+                url=f"https://t.me/{app.username}?startgroup=true",
+            ),
         ],
     ]
     return buttons
@@ -47,20 +53,22 @@ def track_markup(_, videoid, user_id, channel, fplay):
 def stream_markup(_, chat_id):
     buttons = [
         [
-            InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
-            InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
-            InlineKeyboardButton(text="↻", callback_data=f"ADMIN Replay|{chat_id}"),
-            InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
-            InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
+            InlineKeyboardButton(text="𝐄𝐍𝐃", callback_data=f"ADMIN Stop|{chat_id}"),
+            InlineKeyboardButton(text="𝐑𝐄𝐒𝐔𝐌𝐄", callback_data=f"ADMIN Resume|{chat_id}"),
+            InlineKeyboardButton(text="𝐏𝐀𝐔𝐒𝐄", callback_data=f"ADMIN Pause|{chat_id}"),
         ],
         [
-            InlineKeyboardButton(text="اوهام .", url="https://t.me/xG_Ln"),
+            InlineKeyboardButton(text="𝐂𝐇𝐀𝐍𝐍𝐄𝐋", url=f"https://t.me/xG_Ls"),
+            InlineKeyboardButton(text="𝐆𝐑𝐎𝐔𝐏", url=f"https://t.me/T0c_aR"),
+        ],
+        [
+            InlineKeyboardButton(text="𝐁𝐨𝐝𝐚 𓏺 بــودا", url=f"https://t.me/CL_3Q"),
         ],
         [
             InlineKeyboardButton(
-                text="اضف البوت الي مجموعتك او قناتك⋡",
-                url=f"https://t.me/{_['bot_username']}?startgroup=true",
-            )
+                text="𓏺 𝖺𝖣𝖣 𝖬𝖾 𝖳𝗈 𝖸𝗈𝗎𝗋 𝖦𝗋𝗈u𝗉𝗌 .",
+                url=f"https://t.me/{app.username}?startgroup=true",
+            ),
         ],
     ]
     return buttons
@@ -71,11 +79,11 @@ def playlist_markup(_, videoid, user_id, ptype, channel, fplay):
         [
             InlineKeyboardButton(
                 text=_["P_B_1"],
-                callback_data=f"AnonyPlaylists {videoid}|{user_id}|{ptype}|a|{channel}|{fplay}",
+                callback_data=f"ModyPlaylists {videoid}|{user_id}|{ptype}|a|{channel}|{fplay}",
             ),
             InlineKeyboardButton(
                 text=_["P_B_2"],
-                callback_data=f"AnonyPlaylists {videoid}|{user_id}|{ptype}|v|{channel}|{fplay}",
+                callback_data=f"ModyPlaylists {videoid}|{user_id}|{ptype}|v|{channel}|{fplay}",
             ),
         ],
         [
@@ -129,7 +137,7 @@ def slider_markup(_, videoid, user_id, query, query_type, channel, fplay):
                 callback_data=f"forceclose {query}|{user_id}",
             ),
             InlineKeyboardButton(
-                text="▷",
+                text="𝐑𝐄𝐒𝐔𝐌𝐄",
                 callback_data=f"slider F|{query_type}|{query}|{user_id}|{channel}|{fplay}",
             ),
         ],
