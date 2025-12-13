@@ -36,7 +36,7 @@ def stream_markup_timer(_, chat_id, played, dur):
             InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),        
         ],
         [
-            InlineKeyboardButton(text="𝐁𝐨𝐝𝐚 𓏺 بــودا", url=f"https://t.me/CL_3Q"),
+            InlineKeyboardButton(text="𝅄 𓏺 𝗛𝗲𝘅 .", url=f"https://t.me/CL_3Q"),
         ],
         [
             InlineKeyboardButton(
@@ -58,7 +58,7 @@ def stream_markup(_, chat_id):
             InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),        
         ],
         [
-            InlineKeyboardButton(text="𝐁𝐨𝐝𝐚 𓏺 بــودا", url=f"https://t.me/CL_3Q"),
+            InlineKeyboardButton(text="𝅄 𓏺 𝗛𝗲𝘅 .", url=f"https://t.me/CL_3Q"),
         ],
         [
             InlineKeyboardButton(
